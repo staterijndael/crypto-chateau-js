@@ -43,10 +43,11 @@ const primeRaw = new Uint8Array([
 export const Generator = Number(2);
 export const Prime = byteArrayToBigInt(primeRaw);
 
-function byteArrayToBigInt(byteArray: Uint8Array): BigInt {
+function byteArrayToBigInt(byteArray: Uint8Array): bigint {
     let value = BigInt(0);
-    for (var i = byteArray.length - 1; i >= 0; i--) {
-        value = (value * BigInt(256)) + BigInt(byteArray[i]);
+    for (var i = 0; i < byteArray.length; i++) {
+		const bi = BigInt(byteArray[i])
+        value = (value << 8n) + bi;
     }
 
     return value;

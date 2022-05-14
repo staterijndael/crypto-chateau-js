@@ -1,6 +1,6 @@
 import { isMobile } from "./global"
 
-export function randBetween (max: BigInt, min: BigInt = 1n): bigint {
+export function randBetween (max: bigint, min: bigint = 1n): bigint {
     if (max <= min) throw new RangeError('Arguments MUST be: max > min')
     const interval = BigInt(max) - BigInt(min)
     const bitLen = bitLength(interval)
