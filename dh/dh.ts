@@ -33,7 +33,7 @@ export class KeyStore {
     }
 }
 
-function isKeyValid(key: BigInt): boolean{
+export function isKeyValid(key: BigInt): boolean{
     if (key == BigInt(0) || key == undefined){
         return false;
     }

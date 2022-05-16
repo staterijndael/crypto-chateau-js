@@ -1,4 +1,8 @@
 export interface Conn {
-    write(data: string | Buffer): void
-    read(): string | Buffer
+    encryption: boolean
+    sharedKey: Uint8Array
+
+    write(data: Uint8Array): void
+    read(): Uint8Array
+    close(): void
 }

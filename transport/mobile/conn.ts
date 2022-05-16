@@ -1,12 +1,19 @@
 import {Conn} from "../conn"
 import TcpSocket from 'react-native-tcp-socket';
+import {Encrypt, Decrypt} from "../../aes-256/aes256"
 
-class ConnMobile implements Conn{
+export class ConnMobile implements Conn{
     client: TcpSocket.Socket;
-    data: string | Buffer;
+    data: Uint8Array;
     dataReady: boolean
 
+    encryption: boolean
+    sharedKey: Uint8Array
+
     constructor(ip: string, port: number) {
+        this.encryption = false
+        this.sharedKey = new Uint8Array();
+
         this.client = new TcpSocket.Socket()
         this.client.connect({
             host: ip,
@@ -19,25 +26,38 @@ class ConnMobile implements Conn{
                 continue
             }
 
-            this.data = data
+            this.data = Buffer.from(data)
             this.dataReady = true
         })
 
-        this.data = '';
+        this.data = Buffer.from("");
         this.dataReady = false
     }
-    write(data: string | Buffer): void{
+    write(data: Uint8Array): void{
+        if (this.encryption){
+            data = Encrypt(data.toString(), this.sharedKey)
+        }
         this.client.write(data)
     }
 
-    read(): string | Buffer{
+    read(): Uint8Array{
         for (;!this.dataReady;){
             continue
         }
 
         const currentData = this.data
         this.dataReady = false
-        
-        return currentData
+
+        if (this.encryption){
+            const decryptedData = Decrypt(currentData, this.sharedKey)
+
+            return decryptedData
+        }else{
+            return currentData
+        }
+    }
+
+    close(): void{
+        this.client.destroy()
     }
 }

@@ -1,6 +1,7 @@
 import {keyExpansion, addRoundKey, subBytes, shiftRows, mixColumns} from "./encrypt_steps"
 import {InvShiftRows, InvMixColumns, InvSubBytes} from "./decrypt_steps"
 import {Nk, Nb, Nr} from "./params"
+import {stringToUInt8} from "../utils/utils"
 
 export function Encrypt(inputString: string, key: Uint8Array): Uint8Array {
 	if (inputString.length == 0) {
@@ -204,8 +205,3 @@ function decrypt(cipher: Uint8Array, key: Uint8Array): Uint8Array {
 
 	return output
 }
-
-function stringToUInt8 (s: string): Uint8Array { 
-    var util= require('util');
-    return new util.TextEncoder("utf-8").encode(s)
-  }
